@@ -1,13 +1,30 @@
-import React from "react";
+import React, { createContext, useContext, useState } from "react";
 
-// 1. create cart context and cart context provider for the entire application to have cart related data;
 
-// 2. maintain cart data in the state; and also functions like addToCart, removeFromCart, checkout etc which updates the cart state are maintained in here
+export const CartContext = createContext();
+const CartContextProvider = ({children}) => {
+  const [totalamount,settotalamount] = useState(0);
+  let [addToCartdata,setAddtoCart] = useState([]);
 
-// 3. provide cart state and functions which can update the state from here so that entire application can comsume the values whenever and whereever required
+const AddToCart =  (id,title,price)=>{
+const data = {
+  id : id,
+  title: title,
+  price: price,
+}
+setAddtoCart([...addToCartdata,data]);
+}
+const handleRemove = (data)=>{
+ const newarr =   addToCartdata.filter((dat)=>{
+ return dat!=data;
+ })
+ setAddtoCart(newarr);
+}
+const handleCheckOut = ()=>{
+  setAddtoCart([]);
+}
 
-const CartContextProvider = () => {
-  return <>CartContextProvider</>;
-};
+  return <CartContext.Provider value={{handleCheckOut,AddToCart,addToCartdata,totalamount,settotalamount,handleRemove}}>{children}</CartContext.Provider>  ;
+}
 
 export default CartContextProvider;

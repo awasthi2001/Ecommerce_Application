@@ -1,17 +1,70 @@
-import React from "react";
+import React, { useEffect, useState,useContext } from "react";
+import {Button} from '@chakra-ui/react'
+import { CartContext } from "../Context/CartContext/CartContextProvider";
 
-// 1. API request should be made to `https://fakestoreapi.com/products` or (`https://jabz-101-app.herokuapp.com/products` - please use this one if the fakestore api doesn't work ) on mount and get the data and the same data should be displayed in the form of cards ( 3 per row in large screens, 2 per row  in medium screens and 1 per row  in small screen  )
-
-// 2. loading, error and data state should be maintained; show proper loading indicator and error state when required;
-
-// 3. each product card should atleast contain product image, title , price and a add to cart button;
-
-// 4. cart data is maintained in the cart context and based on the cart data if the product is already added to the cart, then the add to cart button should be disabled for that particular product;
-
-// 5. clicking on add to cart button will add the product to the cart; this cart is maintained in the cart context;
 
 const Home = () => {
-  return <div>Home</div>;
+  const {AddToCart,addToCartdata} = useContext(CartContext);
+  const [loading,setloading] = useState(false);
+  const [error,seterror] = useState(false);
+  const [data,setdata] = useState([]);
+  const fetchAndUpdate =async ()=>{
+    try {
+      setloading(true)
+      let res = await fetch(`https://fakestoreapi.com/products`);
+    let data = await res.json();
+    //console.log(data);
+    setdata(data);
+   setloading(false)
+    } catch (error) {
+      seterror(true);
+    }
+  }
+
+ const  handleAddToCart = (id,title,price)=>{
+  AddToCart(id,title,price);
+ }
+  useEffect(()=>{
+  fetchAndUpdate();
+  },[])
+  if(loading){
+    return <img style={{
+      display: 'block',
+      margin: 'auto',
+    }} src="https://media3.giphy.com/media/3oEjI6SIIHBdRxXI40/200.gif" alt="" />
+  }
+  if(error){
+    return alert('Something went wrong. please refresh.')
+  }
+  return <div className="container" style={{
+    display : 'grid',
+    gridTemplateColumns : 'repeat(3,1fr)',
+    gap: '20px',
+    textAlign: 'center',
+    marginTop : '30px'
+  }} >
+     {
+      data.map(({id,image,title,price})=>{
+    
+    return <div style={{
+      boxShadow: "rgba(0, 0, 0, 0.24) 0px 3px 8px",
+      padding: '5px'
+    }} key={id} className="child">
+      <img style={{
+        width: '100%',
+        height: '300px'
+      }} src={image} alt="" />
+      <h4>{title}</h4>
+      <p>{price}</p>
+
+      <Button  style={{
+        marginTop : '10px',
+      }}  onClick={()=>handleAddToCart(id,title,price)}>ADD TO CART</Button>
+    
+    </div>
+      })
+     }
+  </div>;
 };
 
 export default Home;
