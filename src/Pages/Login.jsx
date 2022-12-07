@@ -1,5 +1,6 @@
 import React from "react";
-import { Box, Input, Stack } from '@chakra-ui/react'
+import { Box, Input, Stack,Button } from '@chakra-ui/react'
+import { useState } from "react";
 // 1. this page should contain two input boxes which takes email and password from the user and a login button.
 
 // 2. in this page you should get the auth state from auth context and based on auth state;if user is already logged in then user should be redirected to home page
@@ -11,16 +12,30 @@ import { Box, Input, Stack } from '@chakra-ui/react'
 // 5. upon successful login, login success action is dispatched with token we get back as response and the authentication status and token is updated in the context API. user then gets redirected to home page;
 
 // 6. Proper Alert should be displayed to user upon unsuccessful API call. the message can be `Something went wrong. please refresh.`
-
+const initdata = {
+  email : '',
+  password : ''
+}
 const Login = () => {
-  return <Box>
-  <Stack spacing={3}>
-  <Input placeholder='extra small size' size='xs' />
-  <Input placeholder='small size' size='sm' />
-  <Input placeholder='medium size' size='md' />
-  <Input placeholder='large size' size='lg' />
-</Stack>
-  </Box>;
+  const [formdata,setformdata] = useState(initdata)
+  const handleSubmit = ()=>{
+    
+  }
+  return <div style={{
+    boxShadow: "rgba(0, 0, 0, 0.35) 0px 5px 15px",
+    width: '40%',
+    margin: 'auto',
+    padding: '20px',
+    marginTop: '70px'
+  }}>
+  <Input focusBorderColor='pink.400' placeholder='Enter Your Email Id' size='md' name='email' value={formdata.email}  />
+  <Input focusBorderColor='pink.400' type='password' placeholder='Enter Your Password' name='password' size='md' value={formdata.password}  />
+  <Button  style={{
+    display: 'block',
+    margin: 'auto',
+    marginTop: '10px'
+  }} onClick={handleSubmit}>LOGIN</Button>
+  </div>;
 };
 
 export default Login;
