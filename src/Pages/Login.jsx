@@ -1,6 +1,7 @@
-import React from "react";
+import React, { useContext } from "react";
 import { Box, Input, Stack,Button } from '@chakra-ui/react'
 import { useState } from "react";
+import { AuthContext } from "../Context/AuthContext/AuthContextProvider";
 // 1. this page should contain two input boxes which takes email and password from the user and a login button.
 
 // 2. in this page you should get the auth state from auth context and based on auth state;if user is already logged in then user should be redirected to home page
@@ -18,8 +19,13 @@ const initdata = {
 }
 const Login = () => {
   const [formdata,setformdata] = useState(initdata)
+  let{handleLogin} = useContext(AuthContext)
+ const handleChange = (e)=>{
+  let{value,name} = e.target;
+  setformdata({...formdata,[name]:value})
+ }
   const handleSubmit = ()=>{
-    
+  handleLogin(formdata);
   }
   return <div style={{
     boxShadow: "rgba(0, 0, 0, 0.35) 0px 5px 15px",
@@ -28,8 +34,8 @@ const Login = () => {
     padding: '20px',
     marginTop: '70px'
   }}>
-  <Input focusBorderColor='pink.400' placeholder='Enter Your Email Id' size='md' name='email' value={formdata.email}  />
-  <Input focusBorderColor='pink.400' type='password' placeholder='Enter Your Password' name='password' size='md' value={formdata.password}  />
+  <Input focusBorderColor='pink.400' placeholder='Enter Your Email Id' size='md' name='email' value={formdata.email} onChange={handleChange} />
+  <Input focusBorderColor='pink.400' type='password' placeholder='Enter Your Password' name='password' size='md' value={formdata.password} onChange={handleChange}  />
   <Button  style={{
     display: 'block',
     margin: 'auto',
