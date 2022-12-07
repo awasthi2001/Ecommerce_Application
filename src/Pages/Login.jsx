@@ -4,6 +4,7 @@ import { useState } from "react";
 import { AuthContext } from "../Context/AuthContext/AuthContextProvider";
 import { useToast } from '@chakra-ui/react'
 import { Navigate, useNavigate } from "react-router-dom";
+import { useEffect } from "react";
 // 1. this page should contain two input boxes which takes email and password from the user and a login button.
 
 // 2. in this page you should get the auth state from auth context and based on auth state;if user is already logged in then user should be redirected to home page
@@ -30,10 +31,7 @@ const Login = () => {
  }
   const handleSubmit = ()=>{
   handleLogin(formdata);
-  }
-
   if(token){
-    navigate('/');
     return  toast({
       title: 'Successfully Logged in',
       description: "",
@@ -42,8 +40,15 @@ const Login = () => {
       duration: 9000,
       isClosable: true,
     })
-
   }
+  }
+ useEffect(()=>{
+  if(token){
+    navigate('/');
+  }
+ },)
+ 
+
    if(error){
      return  toast({
       title: 'Error',
