@@ -2,6 +2,8 @@ import React, { useContext } from "react";
 import { Box, Input, Stack,Button } from '@chakra-ui/react'
 import { useState } from "react";
 import { AuthContext } from "../Context/AuthContext/AuthContextProvider";
+import { useToast } from '@chakra-ui/react'
+import { Navigate, useNavigate } from "react-router-dom";
 // 1. this page should contain two input boxes which takes email and password from the user and a login button.
 
 // 2. in this page you should get the auth state from auth context and based on auth state;if user is already logged in then user should be redirected to home page
@@ -19,7 +21,9 @@ const initdata = {
 }
 const Login = () => {
   const [formdata,setformdata] = useState(initdata)
-  let{handleLogin} = useContext(AuthContext)
+  const toast = useToast();
+  let navigate = useNavigate();
+  let{handleLogin,loading,error,token} = useContext(AuthContext)
  const handleChange = (e)=>{
   let{value,name} = e.target;
   setformdata({...formdata,[name]:value})
@@ -27,6 +31,29 @@ const Login = () => {
   const handleSubmit = ()=>{
   handleLogin(formdata);
   }
+
+  if(token){
+    navigate('/');
+    return  toast({
+      title: 'Successfully Logged in',
+      description: "",
+      position : 'top',
+      status: 'success',
+      duration: 9000,
+      isClosable: true,
+    })
+
+  }
+   if(error){
+     return  toast({
+      title: 'Error',
+      description: "Something went wrong. please refresh",
+      position : 'top',
+      status: 'error',
+      duration: 9000,
+      isClosable: true,
+    })
+   }
   return <div style={{
     boxShadow: "rgba(0, 0, 0, 0.35) 0px 5px 15px",
     width: '40%',
@@ -40,7 +67,7 @@ const Login = () => {
     display: 'block',
     margin: 'auto',
     marginTop: '10px'
-  }} onClick={handleSubmit}>LOGIN</Button>
+  }} isLoading={loading} onClick={handleSubmit}>LOGIN</Button>
   </div>;
 };
 
